@@ -2,10 +2,14 @@
 <html lang="sv">
 <head>
 <meta charset="utf-8">
-<!-- Omslagssida för budgetappen. All logik och data ligger kvar i Apps Script och Google Sheets. -->
+<!-- Omslagssida för budgetappen (v2). All logik och data ligger kvar i Apps Script och Google Sheets.
+     Sidan minns appkoden åt appen, så att den inte behöver skrivas in igen. -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Budget</title>
 <meta name="theme-color" content="#1a0f12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Budget">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="robots" content="noindex, nofollow">
@@ -29,13 +33,31 @@
   <div id="laddar">
     <div class="ruta" aria-hidden="true">◆</div>
     <div>Öppnar budgeten…</div>
-    <small>Blir det tomt? Du är troligen inte inloggad på Google här.
-      <a href="https://script.google.com/macros/s/AKfycbxGb9a6zEhFJXumW8n66Z-wfPhXOwcGO_qn33p7OoaY3sCMX0l--qPZK3fTxRbx-yoLOQ/exec">Öppna appen direkt</a>
-      och logga in, och kom sedan tillbaka hit.</small>
+    <small>Laddar den inte? <a href="https://script.google.com/macros/s/AKfycbxGb9a6zEhFJXumW8n66Z-wfPhXOwcGO_qn33p7OoaY3sCMX0l--qPZK3fTxRbx-yoLOQ/exec">Öppna appen direkt</a>.</small>
   </div>
   <iframe
     src="https://script.google.com/macros/s/AKfycbxGb9a6zEhFJXumW8n66Z-wfPhXOwcGO_qn33p7OoaY3sCMX0l--qPZK3fTxRbx-yoLOQ/exec"
     title="Budget" allow="clipboard-write"
     onload="setTimeout(function(){document.getElementById('laddar').classList.add('borta')},400)"></iframe>
+<script>
+  // Appen (inne i Googles ruta) ber om, sparar och glömmer appkoden här.
+  // Svar ges bara till Googles app-domän.
+  (function(){
+    var NYCKEL = "budget.kod";
+    function franAppen(o){ return /^https:\/\/[a-z0-9-]+\.script\.googleusercontent\.com$/.test(o) || /\.googleusercontent\.com$/.test(o); }
+    window.addEventListener("message", function(ev){
+      if(!franAppen(ev.origin) || !ev.data || typeof ev.data !== "object") return;
+      try{
+        if(ev.data.budget === "hamtaKod"){
+          ev.source.postMessage({ budget: "kod", kod: localStorage.getItem(NYCKEL) || "" }, ev.origin);
+        } else if(ev.data.budget === "sparaKod" && typeof ev.data.kod === "string"){
+          localStorage.setItem(NYCKEL, ev.data.kod);
+        } else if(ev.data.budget === "glomKod"){
+          localStorage.removeItem(NYCKEL);
+        }
+      }catch(e){}
+    });
+  })();
+</script>
 </body>
 </html>
