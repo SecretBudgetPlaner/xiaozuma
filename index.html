@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<!-- Omslagssida för budgetappen. All logik och data ligger kvar i Apps Script och Google Sheets. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Budget</title>
+<meta name="theme-color" content="#1a0f12">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  html, body { margin: 0; height: 100%; background: #1a0f12; overflow: hidden; }
+  iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+  #laddar {
+    position: fixed; inset: 0; z-index: 2; background: #1a0f12; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 1.2rem; color: #e9dfe1;
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; text-align: center; padding: 2rem;
+  }
+  #laddar .ruta { font-size: 2.2rem; color: #c48a97; animation: puls 1.6s ease-in-out infinite; }
+  #laddar a { color: #e9dfe1; text-underline-offset: 3px; }
+  #laddar small { color: #a8979b; max-width: 30ch; }
+  #laddar.borta { display: none; }
+  @keyframes puls { 50% { opacity: .35; } }
+  @media (prefers-reduced-motion: reduce) { #laddar .ruta { animation: none; } }
+</style>
+</head>
+<body>
+  <div id="laddar">
+    <div class="ruta" aria-hidden="true">◆</div>
+    <div>Öppnar budgeten…</div>
+    <small>Blir det tomt? Du är troligen inte inloggad på Google här.
+      <a href="https://script.google.com/macros/s/AKfycbxGb9a6zEhFJXumW8n66Z-wfPhXOwcGO_qn33p7OoaY3sCMX0l--qPZK3fTxRbx-yoLOQ/exec">Öppna appen direkt</a>
+      och logga in, och kom sedan tillbaka hit.</small>
+  </div>
+  <iframe
+    src="https://script.google.com/macros/s/AKfycbxGb9a6zEhFJXumW8n66Z-wfPhXOwcGO_qn33p7OoaY3sCMX0l--qPZK3fTxRbx-yoLOQ/exec"
+    title="Budget" allow="clipboard-write"
+    onload="setTimeout(function(){document.getElementById('laddar').classList.add('borta')},400)"></iframe>
+</body>
+</html>
